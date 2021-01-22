@@ -89,7 +89,7 @@ Toolkit.run(async tools => {
       ['version', '--allow-same-version=true', '--git-tag-version=false', current])
     console.log('current:', current, '/', 'version:', version)
     let newVersion = execSync(`npm version --git-tag-version=false ${version}`).toString().trim()
-    // await tools.runInWorkspace('git', ['commit', '-a', '-m', `:memo: ${commitMessage} ${newVersion}`])
+    await tools.runInWorkspace('git', ['commit', '-a', '-m', `:memo: ${commitMessage} ${newVersion}`])
 
     // now go to the actual branch to perform the same versioning
     if (isPullRequest) {
@@ -104,13 +104,6 @@ Toolkit.run(async tools => {
     newVersion = `${process.env['INPUT_TAG-PREFIX']}${newVersion}`
     console.log('new version:', newVersion)
     console.log(`::set-output name=newTag::${newVersion}`)
-    try {
-      // to support "actions/checkout@v1"
-      await tools.runInWorkspace('git', ['commit', '-a', '-m', `:memo: ${commitMessage} ${newVersion}`])
-    } catch (e) {
-      console.warn('git commit failed because you are using "actions/checkout@v2"; ' +
-        'but that doesnt matter because you dont need that git commit, thats only for "actions/checkout@v1"')
-    }
 
     const remoteRepo = `https://${process.env.GITHUB_ACTOR}:${process.env.GITHUB_TOKEN}@github.com/${process.env.GITHUB_REPOSITORY}.git`
     if (process.env['INPUT_SKIP-TAG'] !== 'true') {
