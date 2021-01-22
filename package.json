@@ -1,5 +1,5 @@
 {
-  "name": "gh-action-bump-version",
+  "name": "gh-action-bump-version-without-commit",
   "version": "8.0.18",
   "repository": {
     "type": "git",
